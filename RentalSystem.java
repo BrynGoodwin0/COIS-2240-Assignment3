@@ -90,9 +90,15 @@ public class RentalSystem {
     		records.close();
     	} catch (Exception e) {}
     }
-    public void addVehicle(Vehicle vehicle) {
-        vehicles.add(vehicle);
-        saveVehicle(vehicle);
+    public Boolean addVehicle(Vehicle vehicle) {
+    	if (findVehicleByPlate(vehicle.getLicensePlate()) != null) {
+    		System.out.println("A vehicle with that license plate already exists. No new vehicle added.");
+    		return false;
+    	} else {
+    		vehicles.add(vehicle);
+    		saveVehicle(vehicle);
+    		return true;
+    	}
     }
     
     public void saveVehicle(Vehicle vehicle) {
@@ -120,9 +126,15 @@ public class RentalSystem {
     	
     }
 
-    public void addCustomer(Customer customer) {
-        customers.add(customer);
-        saveCustomer(customer);
+    public boolean addCustomer(Customer customer) {
+    	if (findCustomerById(customer.getCustomerId()) != null) {
+    		System.out.println("A customer with that ID already exists. No new customer added");
+    		return false;
+    	} else {
+    		customers.add(customer);
+    		saveCustomer(customer);
+    		return true;
+    	}
     }
     
     public void saveCustomer(Customer customer) {
