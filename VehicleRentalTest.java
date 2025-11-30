@@ -2,6 +2,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
+
+
 class VehicleRentalTest {
 	
 	@Test
@@ -54,5 +58,13 @@ class VehicleRentalTest {
 		assertEquals(vehicle.getStatus(), Vehicle.VehicleStatus.Available);
 		
 		assertFalse(system.returnVehicle(vehicle, customer, null, 0));
+	}
+	
+	@Test
+	void testSingletonRentalSystem() throws Exception {
+		Constructor<RentalSystem> constructor = RentalSystem.class.getDeclaredConstructor();
+		assertEquals(constructor.getModifiers(), Modifier.PRIVATE);
+		RentalSystem instance = RentalSystem.getInstance();
+		assertNotNull(instance);
 	}
 }
