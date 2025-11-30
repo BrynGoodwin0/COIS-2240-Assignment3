@@ -6,9 +6,7 @@ public class Car extends Vehicle implements Rentable {
         this.numSeats = numSeats;
     }
 
-    public int getNumSeats() {
-        return numSeats;
-    }
+    public int getNumSeats() { return numSeats; }
 
     @Override
     public String getInfo() {

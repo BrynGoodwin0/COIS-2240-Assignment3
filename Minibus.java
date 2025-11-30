@@ -5,6 +5,10 @@ public class Minibus extends Vehicle implements Rentable {
         super(make, model, year);
         this.isAccessible = isAccessible;
     }
+    
+    public boolean getIsAccessible() {
+    	return isAccessible;
+    }
 
     @Override
     public String getInfo() {
