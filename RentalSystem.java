@@ -2,6 +2,8 @@ import java.util.List;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.io.FileWriter;
+import java.io.File;
+import java.util.Scanner;
 
 public class RentalSystem {
 	
@@ -10,7 +12,7 @@ public class RentalSystem {
     private List<Customer> customers = new ArrayList<>();
     private RentalHistory rentalHistory = new RentalHistory();
     
-    private RentalSystem() {};
+    private RentalSystem() {loadData();};
     
     public static RentalSystem getInstance() {
     	if (instance == null) {
@@ -19,6 +21,75 @@ public class RentalSystem {
     	return instance;
     }
 
+    private void loadData() {
+    	try {
+    		//vehicles
+    		File vehicleFile = new File("vehicles.txt");
+    		File customerFile = new File("customers.txt");
+    		File recordFile = new File("rental_records.txt");
+    		Scanner vehicles = new Scanner(vehicleFile);
+    		while (vehicles.hasNextLine()) {
+    			String line = vehicles.nextLine();
+    			String[] data = line.split(",");
+    			Vehicle vehicle = null;
+    			switch(data[data.length-1]) {
+    			case "Car":
+    				vehicle = new Car(data[1], data[2], Integer.parseInt(data[3]), Integer.parseInt(data[5]));
+    				break;
+    			case "SportCar":
+    				vehicle = new SportCar(data[1], data[2], Integer.parseInt(data[3]), Integer.parseInt(data[5]), Integer.parseInt(data[6]), Boolean.parseBoolean(data[7]));
+    				break;
+    			case "Minibus":
+    				vehicle = new Minibus(data[1], data[2], Integer.parseInt(data[3]), Boolean.parseBoolean(data[5]));
+    				break;
+    			case "PickupTruck":
+    				vehicle = new PickupTruck(data[1], data[2], Integer.parseInt(data[3]), Double.parseDouble(data[5]), Boolean.parseBoolean(data[6]));
+    				break;
+    			default:
+    				break;
+    			}
+    			vehicle.setLicensePlate(data[0]);
+    			switch (data[4]) {
+    			case "Available":
+    				vehicle.setStatus(Vehicle.VehicleStatus.Available);
+    				break;
+    			case "Held":
+    				vehicle.setStatus(Vehicle.VehicleStatus.Held);
+    				break;
+    			case "Rented":
+    				vehicle.setStatus(Vehicle.VehicleStatus.Rented);
+    				break;
+    			case "OutOfService":
+    				vehicle.setStatus(Vehicle.VehicleStatus.OutOfService);
+    				break;
+    			case "UnderMaintenance":
+    				vehicle.setStatus(Vehicle.VehicleStatus.UnderMaintenance);
+    				break;
+    			default:
+    				vehicle.setStatus(null);
+    				break;
+    			}
+    			this.vehicles.add(vehicle);
+    		}
+    		vehicles.close();
+    		//customers
+    		Scanner customers = new Scanner(customerFile);
+    		while (customers.hasNextLine()) {
+    			String[] data = customers.nextLine().split(",");
+    			this.customers.add(new Customer(Integer.parseInt(data[0]),data[1]));
+    		}
+    		customers.close();
+    		//records
+    		Scanner records = new Scanner(recordFile);
+    		while (records.hasNextLine()) {
+    			String[] data = records.nextLine().split(",");
+    			rentalHistory.addRecord(new RentalRecord(findVehicleByPlate(data[0]),
+    									findCustomerById(Integer.parseInt(data[1])),
+    									LocalDate.parse(data[2]), Double.parseDouble(data[3]), data[4]));
+    		}
+    		records.close();
+    	} catch (Exception e) {}
+    }
     public void addVehicle(Vehicle vehicle) {
         vehicles.add(vehicle);
         saveVehicle(vehicle);
