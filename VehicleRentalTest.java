@@ -35,5 +35,24 @@ class VehicleRentalTest {
 	}
 
 	
-	
+	@Test
+	void testRentAndReturnVehicle() {
+		Car vehicle = new Car("test", "testing", 2000, 5);
+		Customer customer = new Customer(1, "tester");
+		
+		assertEquals(vehicle.getStatus(), Vehicle.VehicleStatus.Available);
+		
+		RentalSystem system = RentalSystem.getInstance();
+		
+		Boolean rented = system.rentVehicle(vehicle, customer, null, 0);
+		assertTrue(rented);
+		assertEquals(vehicle.getStatus(), Vehicle.VehicleStatus.Rented);
+		
+		assertFalse(system.rentVehicle(vehicle, customer, null, 0));
+		
+		assertTrue(system.returnVehicle(vehicle, customer, null, 0));
+		assertEquals(vehicle.getStatus(), Vehicle.VehicleStatus.Available);
+		
+		assertFalse(system.returnVehicle(vehicle, customer, null, 0));
+	}
 }

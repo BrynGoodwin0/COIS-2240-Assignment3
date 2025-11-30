@@ -1,3 +1,5 @@
+import java.util.regex.Pattern;
+
 public abstract class Vehicle {
     private String licensePlate;
     private String make;
@@ -27,9 +29,21 @@ public abstract class Vehicle {
     		return input.substring(0,1).toUpperCase() + input.substring(1).toLowerCase();
     	}
     }
+    
+    private Boolean isValidPlate(String plate) {
+    	if (plate == null || plate.isEmpty()) {
+    		return false;
+    	}
+    	//regex to match valid plates
+    	return Pattern.matches("^[a-z|A-Z]{3}\\d{3}\\Z", plate);
+    }
 
     public void setLicensePlate(String plate) {
-        this.licensePlate = plate == null ? null : plate.toUpperCase();
+    	if (isValidPlate(plate)) {
+    		this.licensePlate = plate == null ? null : plate.toUpperCase();
+    	} else {
+    		throw new IllegalArgumentException("A license plate must consist of three numbers followed by three letters");
+    	}
     }
 
     public void setStatus(VehicleStatus status) {

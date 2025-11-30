@@ -24,7 +24,7 @@ public class VehicleRentalApp {
                                        "  3: Pickup Truck");
                     int type = scanner.nextInt();
                     scanner.nextLine();
-
+                    	
                     System.out.print("Enter license plate: ");
                     String plate = scanner.nextLine().toUpperCase();
                     System.out.print("Enter make: ");
@@ -59,7 +59,11 @@ public class VehicleRentalApp {
 		            }
                     
                     if (vehicle != null){
-	                    vehicle.setLicensePlate(plate);
+                    	try {
+                    		vehicle.setLicensePlate(plate);
+                    	} catch (Exception e) {
+                    		System.out.println(e.getMessage());
+                    	}
 	                    rentalSystem.addVehicle(vehicle);
                     }
                     else {
